@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 const line = readFileSync(new URL("./one-line.txt", import.meta.url), "utf8").replace(/\n$/, "");
 
@@ -22,5 +23,9 @@ if (!/[.!?]$/.test(line)) {
   console.error("FAIL: entry must end with terminal punctuation");
   process.exit(1);
 }
+const outputDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
+mkdirSync(outputDir, { recursive: true });
+writeFileSync(join(outputDir, "entry.txt"), line + "\n");
+
 console.log(line);
 console.log(`OK: ${line.length}/140 characters, single line.`);
